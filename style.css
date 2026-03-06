@@ -1,59 +1,134 @@
-/* Tampilan Lapangan (#1) */
-.pitch {
-    width: 300px;
-    height: 400px;
-    background: #065f46;
-    border: 3px solid white;
-    position: relative;
-    margin: 20px auto;
+/* --- style.css --- */
+
+/* Reset Dasar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif; /* Pastikan font ini terinstall atau panggil di HTML */
 }
-.player {
-    width: 50px;
-    height: 50px;
-    background: #fbbf24;
-    color: black;
-    border-radius: 50%;
-    position: absolute;
+
+body {
+    background-color: #0f172a; /* Biru Gelap Premium */
+    /* Tambahkan background image samar bertema futsal/stadium jika ada */
+    /* background-image: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('path/to/stadium.jpg'); */
+    background-size: cover;
+    background-position: center;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 10px;
-    font-weight: bold;
+    min-height: 100vh;
+    padding: 20px;
 }
-.pivot { top: 20px; left: 125px; }
-.flank-l { top: 150px; left: 30px; }
-.flank-r { top: 150px; right: 30px; }
-.anchor { bottom: 100px; left: 125px; }
-.gk { bottom: 10px; left: 125px; }
 
-/* Tabel Stats (#4) */
-.stat-table {
-    width: 80%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-.stat-table th, .stat-table td {
-    border: 1px solid #334155;
-    padding: 12px;
-}
-.stat-table th { background: #10b981; }
-
-/* Jersey (#6) */
-.jersey-box {
-    width: 150px;
-    height: 180px;
-    background: #334155;
-    margin: 20px auto;
+/* Container Utama - Efek Kaca (Glassmorphism) */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    height: 80vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    font-weight: bold;
+    background: rgba(255, 255, 255, 0.05); /* Transparan putih tipis */
+    backdrop-filter: blur(15px); /* Efek Blur Kaca */
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Border kaca samar */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5); /* Bayangan dalam */
 }
 
-/* Kas (#9) */
-.cash-box {
-    font-size: 24px;
+/* Sidebar Styling */
+.sidebar {
+    width: 280px;
+    background: rgba(6, 78, 59, 0.6); /* Hijau gelap transparan */
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar h2 {
+    color: #10b981; /* Hijau Neon */
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    background: rgba(255, 255, 255, 0.03);
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 500;
+    border: 1px solid transparent;
+}
+
+/* Efek Hover di Sidebar */
+.sidebar li:hover {
+    background: rgba(16, 185, 129, 0.2); /* Background hijau neon transparan */
+    transform: translateX(10px);
+    border-color: rgba(16, 185, 129, 0.5);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+/* Warna Teks Emoji */
+.sidebar li span.emoji {
+    margin-right: 15px;
+    font-size: 1.2em;
+}
+
+/* Main Display Styling */
+.content {
+    flex: 1;
+    padding: 60px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alihkan ke kiri biar rapi */
+    justify-content: flex-start; /* Mulai dari atas */
+}
+
+.welcome-msg h1 {
+    font-size: 40px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.welcome-msg p {
+    font-size: 16px;
+    color: #94a3b8; /* Abu-abu terang */
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.welcome-msg strong {
     color: #10b981;
-    margin: 20px;
+}
+
+/* Responsif: Kecilkan sidebar di HP */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+    }
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .content {
+        padding: 30px;
+    }
 }
