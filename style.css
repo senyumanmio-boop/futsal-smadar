@@ -1,14 +1,59 @@
-/* Ganti warna utama jadi tema Futsal */
-.sidebar {
-    background-color: #064e3b; /* Hijau hutan gelap */
-    border-right: 2px solid #059669;
+/* Tampilan Lapangan (#1) */
+.pitch {
+    width: 300px;
+    height: 400px;
+    background: #065f46;
+    border: 3px solid white;
+    position: relative;
+    margin: 20px auto;
+}
+.player {
+    width: 50px;
+    height: 50px;
+    background: #fbbf24;
+    color: black;
+    border-radius: 50%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    font-weight: bold;
+}
+.pivot { top: 20px; left: 125px; }
+.flank-l { top: 150px; left: 30px; }
+.flank-r { top: 150px; right: 30px; }
+.anchor { bottom: 100px; left: 125px; }
+.gk { bottom: 10px; left: 125px; }
+
+/* Tabel Stats (#4) */
+.stat-table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+.stat-table th, .stat-table td {
+    border: 1px solid #334155;
+    padding: 12px;
+}
+.stat-table th { background: #10b981; }
+
+/* Jersey (#6) */
+.jersey-box {
+    width: 150px;
+    height: 180px;
+    background: #334155;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-weight: bold;
 }
 
-.sidebar h2 {
-    color: #10b981; /* Hijau neon bola */
-}
-
-.sidebar li:hover {
-    background: #10b981;
-    color: white;
+/* Kas (#9) */
+.cash-box {
+    font-size: 24px;
+    color: #10b981;
+    margin: 20px;
 }
