@@ -1,254 +1,384 @@
 <!DOCTYPE html>
-<html lang="id" class="bg-gray-900 text-gray-100 min-h-screen flex flex-col font-sans">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Manajemen Klub Futsal</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SimCity Sederhana + Fitur Lengkap</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #e0f7fa;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  #stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  #stats div {
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    min-width: 150px;
+    text-align: center;
+  }
+  #game-container {
+    max-width: 1024px;
+    margin: 0 auto;
+  }
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(12, 40px);
+    gap: 4px;
+    margin: 0 auto;
+    background: #b2ebf2;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  .cell {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #0097a7;
+    background-color: #fff;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+    user-select: none;
+    transition: background-color 0.2s, transform 0.1s;
+  }
+  .cell:hover {
+    background-color: #80deea;
+    transform: scale(1.05);
+  }
+  #controls {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+  .build-btn {
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #00796b;
+    color: white;
+    transition: background 0.2s;
+  }
+  .build-btn:hover {
+    background-color: #004d40;
+  }
+  #message {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #d32f2f;
+  }
+  #upgrade-panel {
+    margin-top: 20px;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  }
+  #upgrade-panel h2 {
+    margin-top: 0;
+    text-align: center;
+  }
+  #upgrade-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .upgrade-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f1f8e9;
+    padding: 8px;
+    border-radius: 5px;
+  }
+  .upgrade-item button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #558b2f;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .upgrade-item button:hover {
+    background-color: #33691e;
+  }
+  /* Responsive for small screens */
+  @media(max-width: 768px) {
+    #grid {
+      grid-template-columns: repeat(8, 40px);
+    }
+  }
+</style>
 </head>
-<body class="flex flex-col min-h-screen">
-
-<!-- Navbar -->
-<nav class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-    <div class="flex items-center space-x-3 font-bold text-xl text-blue-400">
-      <i class="fas fa-futbol"></i>
-      <span>FUTSAL CLUB</span>
-    </div>
-    <div class="flex space-x-4">
-      <button id="btn-dashboard" class="px-3 py-2 rounded-md bg-blue-600 font-semibold" onclick="showSection('dashboard')">Dashboard</button>
-      <button id="btn-keuangan" class="px-3 py-2 rounded-md hover:bg-gray-700" onclick="showSection('keuangan')">Keuangan</button>
-      <button id="btn-formasi" class="px-3 py-2 rounded-md hover:bg-gray-700" onclick="showSection('formasi')">Formasi</button>
-      <button id="btn-histori" class="px-3 py-2 rounded-md hover:bg-gray-700" onclick="showSection('histori')">Histori</button>
-    </div>
+<body>
+<h1>SimCity Sederhana + Fitur Lengkap</h1>
+<div id="stats">
+  <div>Uang: $<span id="money">1500</span></div>
+  <div>Bahan: <span id="materials">50</span></div>
+  <div>Populasi: <span id="population">0</span></div>
+</div>
+<div id="game-container">
+  <div id="grid"></div>
+  <div id="message"></div>
+  <div id="controls">
+    <button class="build-btn" onclick="selectBuilding('house')">Rumah ($100)</button>
+    <button class="build-btn" onclick="selectBuilding('factory')">Pabrik ($300)</button>
+    <button class="build-btn" onclick="selectBuilding('park')">Taman ($50)</button>
+    <button class="build-btn" onclick="deselectBuilding()">Batal Pilih</button>
+    <button class="build-btn" onclick="showUpgradePanel()">Upgrade Bangunan</button>
+    <button class="build-btn" onclick="resetGame()">Reset Game</button>
   </div>
-</nav>
+  <div id="upgrade-panel" style="display:none;">
+    <h2>Upgrade Bangunan</h2>
+    <div id="upgrade-list"></div>
+    <button class="build-btn" onclick="closeUpgradePanel()">Tutup</button>
+  </div>
+</div>
 
-<!-- Main Content -->
-<main class="flex-1 p-6 max-w-7xl mx-auto w-full space-y-8">
-
-  <!-- Dashboard -->
-  <section id="dashboard" class="transition-all duration-300">
-    <div class="grid md:grid-cols-2 gap-6">
-      <div class="bg-gray-800 p-6 rounded-xl border-l-4 border-green-500 shadow-lg">
-        <div class="flex items-center justify-between mb-2">
-          <p class="text-gray-400">Saldo Kas</p>
-          <i class="fas fa-wallet text-green-400"></i>
-        </div>
-        <h3 class="text-3xl font-bold" id="dash-balance">Rp 0</h3>
-      </div>
-      <div class="bg-gray-800 p-6 rounded-xl border-l-4 border-blue-500 shadow-lg">
-        <div class="flex items-center justify-between mb-2">
-          <p class="text-gray-400">Histori Terbaru</p>
-          <i class="fas fa-history text-blue-400"></i>
-        </div>
-        <h3 class="text-xl font-semibold" id="dash-histori">Belum ada data</h3>
-      </div>
-    </div>
-  </section>
-
-  <!-- Keuangan -->
-  <section id="keuangan" class="hidden transition-all duration-300">
-    <h2 class="text-3xl font-bold mb-4 flex items-center space-x-2">
-      <i class="fas fa-money-bill-wave"></i>
-      <span>Manajemen Keuangan</span>
-    </h2>
-    <form id="financeForm" onsubmit="addTransaction(event)" class="bg-gray-800 p-6 rounded-xl mb-6 flex flex-col md:flex-row gap-4 shadow-lg">
-      <select id="f-type" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white" required>
-        <option value="masuk">Pemasukan</option>
-        <option value="keluar">Pengeluaran</option>
-      </select>
-      <input type="number" id="f-amount" placeholder="Nominal" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white" required>
-      <input type="text" id="f-desc" placeholder="Keterangan" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white" required>
-      <button type="submit" class="bg-blue-600 px-6 py-3 rounded font-semibold hover:bg-blue-500 transition">Simpan</button>
-    </form>
-    <div class="overflow-x-auto">
-      <table class="w-full text-left table-auto border-collapse border border-gray-700 rounded-lg overflow-hidden shadow-lg">
-        <thead class="bg-gray-700 text-sm uppercase">
-          <tr>
-            <th class="p-4 border border-gray-600">Keterangan</th>
-            <th class="p-4 border border-gray-600">Jenis</th>
-            <th class="p-4 border border-gray-600 text-right">Nominal</th>
-          </tr>
-        </thead>
-        <tbody id="financeTableBody"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Formasi & Histori -->
-  <section id="formasi" class="hidden transition-all duration-300 space-y-8">
-
-    <!-- Formasi Pemain lengkap -->
-    <div>
-      <h2 class="text-3xl font-bold mb-4 flex items-center space-x-2">
-        <i class="fas fa-users"></i>
-        <span>Formasi Pemain & Lapangan</span>
-      </h2>
-      <form id="formasiForm" onsubmit="return tambahFormasi()" class="bg-gray-800 p-6 rounded-xl mb-6 flex flex-col md:flex-row gap-4 shadow-lg">
-        <input type="text" id="nama_pemain" placeholder="Nama Pemain" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-white" required>
-        <select id="posisi" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-white" required>
-          <option value="">Pilih Posisi</option>
-          <option value="Penjaga Gawang">Penjaga Gawang</option>
-          <option value="Belakang">Belakang</option>
-          <option value="Tengah">Tengah</option>
-          <option value="Penyerang">Penyerang</option>
-          <option value="Anchor">Anchor</option>
-          <option value="Pivot">Pivot</option>
-          <option value="Plank">Plank</option>
-        </select>
-        <!-- Upload Foto -->
-        <input type="file" id="foto_pemain" accept="image/*" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-white" />
-        <button type="submit" class="bg-green-600 px-4 py-3 rounded font-semibold hover:bg-green-500 transition">Tambah Pemain</button>
-      </form>
-      <!-- Tabel Formasi -->
-      <div class="overflow-x-auto mb-8">
-        <table class="w-full border border-gray-700 rounded-lg shadow-lg">
-          <thead class="bg-gray-700 text-sm uppercase">
-            <tr>
-              <th class="p-4 border border-gray-600">Foto</th>
-              <th class="p-4 border border-gray-600">Nama</th>
-              <th class="p-4 border border-gray-600">Posisi</th>
-            </tr>
-          </thead>
-          <tbody id="formasiTableBody" class="bg-gray-800"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Histori pertandingan -->
-    <div>
-      <h2 class="text-3xl font-bold mb-4 flex items-center space-x-2">
-        <i class="fas fa-history"></i>
-        <span>Histori Pertandingan</span>
-      </h2>
-      <div id="historiList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </div>
-
-  </section>
-
-</main>
-
-<!-- Scripts -->
 <script>
-  let trans = JSON.parse(localStorage.getItem('trans')) || [];
-  let matches = JSON.parse(localStorage.getItem('matches')) || [];
-  let formasi = [];
+const gridSize = 12; // 12x12 grid
+const maxPopulation = 1000;
 
-  function showSection(id) {
-    document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-    document.querySelectorAll('button').forEach(b => b.classList.remove('bg-blue-600'));
-    document.getElementById('btn-' + id).classList.add('bg-blue-600');
-  }
+// Data game
+let money = 1500;
+let materials = 50;
+let population = 0;
+let selectedBuilding = null;
+const gridData = new Array(gridSize * gridSize).fill(null);
+const buildings = {
+  'house': { name: 'Rumah', cost: 100, color: '#8ED6FF', symbol: 'H', income: 2, pop: 1, level: 1 },
+  'factory': { name: 'Pabrik', cost: 300, color: '#FF8C00', symbol: 'F', income: 5, pop: 5, level: 1 },
+  'park': { name: 'Taman', cost: 50, color: '#7CFC00', symbol: 'P', income: 0, pop: 0, level: 1 }
+};
+const upgradeOptions = {
+  'house': { upgradeCost: 150, income: 1, pop: 1 },
+  'factory': { upgradeCost: 300, income: 2, pop: 2 },
+  'park': { upgradeCost: 50, income: 0, pop: 0 }
+};
 
-  // Tambah transaksi keuangan
-  function addTransaction(e) {
-    e.preventDefault();
-    const type = document.getElementById('f-type').value;
-    const amount = parseInt(document.getElementById('f-amount').value);
-    const desc = document.getElementById('f-desc').value;
-    trans.push({ type, amount, desc });
-    localStorage.setItem('trans', JSON.stringify(trans));
-    document.getElementById('financeForm').reset();
-    render();
-  }
+// Load game dari localStorage
+loadGame();
 
-  // Tambah pemain formasi
-  function tambahFormasi() {
-    const nama = document.getElementById('nama_pemain').value;
-    const posisi = document.getElementById('posisi').value;
-    const fotoInput = document.getElementById('foto_pemain');
-    const fotoFile = fotoInput.files[0];
+const gridContainer = document.getElementById('grid');
+const messageDiv = document.getElementById('message');
+const moneySpan = document.getElementById('money');
+const materialsSpan = document.getElementById('materials');
+const populationSpan = document.getElementById('population');
 
-    if(nama && posisi) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const fotoUrl = e.target.result;
-        formasi.push({ nama, posisi, foto: fotoUrl });
-        renderFormasi();
-      }
-      if(fotoFile) {
-        reader.readAsDataURL(fotoFile);
-      } else {
-        formasi.push({ nama, posisi, foto: '' });
-        renderFormasi();
-      }
-    }
-    document.getElementById('formasiForm').reset();
-    return false;
-  }
+const upgradePanel = document.getElementById('upgrade-panel');
+const upgradeList = document.getElementById('upgrade-list');
 
-  // Render ke tabel formasi
-  function renderFormasi() {
-    document.getElementById('formasiTableBody').innerHTML = formasi.map(p => `
-      <tr>
-        <td class="p-2 border border-gray-600 text-center">
-          ${p.foto ? `<img src="${p.foto}" class="w-16 h-16 object-cover rounded" />` : 'No Photo'}
-        </td>
-        <td class="p-4 border border-gray-600">${p.nama}</td>
-        <td class="p-4 border border-gray-600">${p.posisi}</td>
-      </tr>
-    `).join('');
-  }
-
-  // Tambah histori pertandingan
-  function addMatch() {
-    const opp = document.getElementById('m-opp').value;
-    const date = document.getElementById('m-date').value;
-    const time = document.getElementById('m-time').value;
-    matches.push({ opp, date, time });
-    localStorage.setItem('matches', JSON.stringify(matches));
-    document.getElementById('m-opp').value = '';
-    document.getElementById('m-date').value = '';
-    document.getElementById('m-time').value = '';
-    toggleMatchForm();
-    renderHistori();
-  }
-
-  function toggleMatchForm() {
-    document.getElementById('addMatchForm').classList.toggle('hidden');
-  }
-
-  // Render semua data
-  function render() {
-    // Keuangan
-    document.getElementById('financeTableBody').innerHTML = trans.map(t => `
-      <tr class="border-b border-gray-700">
-        <td class="p-4 border border-gray-600">${t.desc}</td>
-        <td class="p-4 border border-gray-600">${t.type}</td>
-        <td class="p-4 border border-gray-600 text-right">Rp ${t.amount.toLocaleString()}</td>
-      </tr>
-    `).join('');
-    const saldo = trans.reduce((a, t) => t.type==='masuk'?a+t.amount:a-t.amount, 0);
-    document.getElementById('dash-balance').innerText = `Rp ${saldo.toLocaleString()}`;
-
-    // Histori pertandingan
-    renderHistori();
-  }
-
-  function renderHistori() {
-    document.getElementById('historiList').innerHTML = matches.length > 0 ? matches.map(m => `
-      <div class="bg-gray-700 p-4 rounded-lg shadow-lg">
-        <h4 class="font-semibold mb-2">Vs ${m.opp}</h4>
-        <p class="text-gray-300">${m.date} | ${m.time}</p>
-      </div>
-    `).join('') : '<p class="text-gray-400">Belum ada data pertandingan</p>';
-
-    // Update data di dashboard
-    if(matches.length > 0) {
-      document.getElementById('dash-histori').innerText = `Terakhir vs ${matches[matches.length-1].opp}`;
+// Buat grid
+for(let i=0; i<gridSize*gridSize; i++) {
+  const cell = document.createElement('div');
+  cell.className = 'cell';
+  cell.dataset.index = i;
+  cell.onclick = () => {
+    if (gridData[i]) {
+      showBuildingInfo(i);
+    } else if (selectedBuilding) {
+      buildBuilding(i);
     } else {
-      document.getElementById('dash-histori').innerText = 'Belum ada data';
+      showMessage('Pilih bangunan terlebih dahulu!');
+    }
+  };
+  gridContainer.appendChild(cell);
+}
+
+// Fungsi tampilkan info bangunan
+function showBuildingInfo(index) {
+  const bType = gridData[index];
+  if (bType) {
+    const b = buildings[bType];
+    showMessage(`Bangunan: ${b.name} (Level ${b.level}) - Income: $${b.income} / tick, Pop: ${b.pop}`);
+  }
+}
+
+// Fungsi bangun bangunan
+function buildBuilding(index) {
+  const bType = selectedBuilding;
+  const b = buildings[bType];
+  if (money >= b.cost) {
+    if (!gridData[index]) {
+      gridData[index] = bType;
+      updateCell(index);
+      money -= b.cost;
+      updateStats();
+      saveGame();
+    } else {
+      showMessage('Sudah ada bangunan di sini!');
+    }
+  } else {
+    showMessage('Uang tidak cukup!');
+  }
+}
+
+// Update tampilan cell
+function updateCell(index) {
+  const cell = gridContainer.children[index];
+  const bType = gridData[index];
+  if (bType) {
+    const b = buildings[bType];
+    cell.style.backgroundColor = b.color;
+    cell.innerText = b.symbol + (b.level > 1 ? 'L' + b.level : '');
+  } else {
+    cell.style.backgroundColor = '#fff';
+    cell.innerText = '';
+  }
+}
+
+// Update semua sel
+function refreshGrid() {
+  for(let i=0; i<gridData.length; i++) {
+    updateCell(i);
+  }
+}
+
+// Pilih bangunan
+function selectBuilding(type) {
+  selectedBuilding = type;
+  showMessage(`Memilih: ${buildings[type].name}`);
+}
+
+// Batalkan pilihan
+function deselectBuilding() {
+  selectedBuilding = null;
+  showMessage('Pilih bangunan dulu!');
+}
+
+// Update statistik
+function updateStats() {
+  moneySpan.innerText = money;
+  materialsSpan.innerText = materials;
+  populationSpan.innerText = population;
+}
+
+// Tampilkan pesan
+function showMessage(msg) {
+  messageDiv.innerText = msg;
+}
+
+// Simpan game
+function saveGame() {
+  localStorage.setItem('simcity', JSON.stringify({
+    money, materials, population, gridData
+  }));
+}
+
+// Muat game
+function loadGame() {
+  const data = localStorage.getItem('simcity');
+  if (data) {
+    const parsed = JSON.parse(data);
+    money = parsed.money;
+    materials = parsed.materials;
+    population = parsed.population;
+    for(let i=0; i<parsed.gridData.length; i++) {
+      gridData[i] = parsed.gridData[i];
     }
   }
+  updateStats();
+  refreshGrid();
+}
 
-  // Inisialisasi
-  showSection('dashboard');
-  render();
+// Fungsi upgrade bangunan
+function showUpgradePanel() {
+  upgradePanel.style.display = 'block';
+  upgradeList.innerHTML = '';
+  // List semua bangunan yang ada
+  for (let i=0; i<gridData.length; i++) {
+    const bType = gridData[i];
+    if (bType) {
+      const b = buildings[bType];
+      const item = document.createElement('div');
+      item.className = 'upgrade-item';
+      item.innerHTML = `
+        ${b.name} (Level ${b.level}) - Income: ${b.income} / tick, Pop: ${b.pop}
+        <button onclick="upgradeBuilding(${i})">Upgrade ($${upgradeOptions[bType].upgradeCost})</button>
+      `;
+      upgradeList.appendChild(item);
+    }
+  }
+}
+
+// Tutup panel upgrade
+function closeUpgradePanel() {
+  upgradePanel.style.display = 'none';
+}
+
+// Upgrade bangunan
+function upgradeBuilding(index) {
+  const bType = gridData[index];
+  if (!bType) return;
+  const b = buildings[bType];
+  const upgrade = upgradeOptions[bType];
+  if (money >= upgrade.upgradeCost) {
+    money -= upgrade.upgradeCost;
+    b.income += upgrade.income;
+    b.pop += upgrade.pop;
+    b.level += 1;
+    updateCell(index);
+    updateStats();
+    showMessage(`${b.name} di posisi ${index} telah diupgrade!`);
+    saveGame();
+    showUpgradePanel();
+  } else {
+    showMessage('Uang tidak cukup untuk upgrade!');
+  }
+}
+
+// Reset game
+function resetGame() {
+  if (confirm('Yakin ingin reset game? Data akan hilang!')) {
+    localStorage.removeItem('simcity');
+    location.reload();
+  }
+}
+
+// Simulasi otomatis pendapatan setiap detik
+setInterval(() => {
+  let totalIncome = 0;
+  for (let i=0; i<gridData.length; i++) {
+    const bType = gridData[i];
+    if (bType) {
+      totalIncome += buildings[bType].income;
+    }
+  }
+  money += totalIncome;
+  // Tambahkan populasi secara otomatis
+  for (let i=0; i<gridData.length; i++) {
+    const bType = gridData[i];
+    if (bType) {
+      population += buildings[bType].pop;
+      if (population > maxPopulation) population = maxPopulation;
+    }
+  }
+  updateStats();
+  saveGame();
+}, 3000); // tiap 3 detik
+
+// Inisialisasi
+updateStats();
+
 </script>
-
 </body>
 </html>
