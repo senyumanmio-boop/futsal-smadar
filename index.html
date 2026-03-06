@@ -1,269 +1,115 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futsal Club Manager Pro</title>
-    
-    <!-- Tailwind CSS (Desain Modern) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Chart.js (Grafik Keuangan) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #0f172a; color: #e2e8f0; }
         .nav-item.active { background-color: #3b82f6; color: white; }
         .hidden-section { display: none; }
-        .fade-in { animation: fadeIn 0.5s ease-in-out; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Gaya Lapangan Futsal */
-        .pitch {
-            background: linear-gradient(180deg, #1e3a8a 0%, #10b981 100%);
-            border: 4px solid white;
-            border-radius: 8px;
-            position: relative;
-            height: 400px;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-        .pitch-line { position: absolute; background: rgba(255,255,255,0.6); }
-        .center-circle { width: 100px; height: 100px; border: 2px solid rgba(255,255,255,0.6); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        .player {
-            width: 40px; height: 40px; background: white; color: #1e3a8a;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: bold; position: absolute; transform: translate(-50%, -50%);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3); cursor: pointer; transition: 0.3s;
-        }
-        .player:hover { transform: translate(-50%, -50%) scale(1.2); z-index: 10; }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Navbar -->
     <nav class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <i class="fa-solid fa-futbol text-blue-500 text-2xl mr-3"></i>
-                    <span class="font-bold text-xl tracking-wider">FUTSAL<span class="text-blue-500">CLUB</span></span>
-                </div>
-                <div class="flex space-x-4">
-                    <button onclick="showSection('dashboard')" class="nav-item active px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-700 transition" id="btn-dashboard">
-                        <i class="fa-solid fa-chart-pie mr-2"></i> Dashboard
-                    </button>
-                    <button onclick="showSection('keuangan')" class="nav-item px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-700 transition" id="btn-keuangan">
-                        <i class="fa-solid fa-wallet mr-2"></i> Keuangan
-                    </button>
-                    <button onclick="showSection('jadwal')" class="nav-item px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-700 transition" id="btn-jadwal">
-                        <i class="fa-solid fa-calendar-days mr-2"></i> Jadwal
-                    </button>
-                    <button onclick="showSection('formasi')" class="nav-item px-3 py-2 rounded-md text-sm font-medium hover:bg-slate-700 transition" id="btn-formasi">
-                        <i class="fa-solid fa-users mr-2"></i> Formasi
-                    </button>
-                </div>
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center text-xl font-bold"><i class="fa-solid fa-futbol text-blue-500 mr-3"></i> FUTSAL<span class="text-blue-500">CLUB</span></div>
+            <div class="flex space-x-2">
+                <button onclick="showSection('dashboard')" class="nav-item active px-3 py-2 rounded-md text-sm" id="btn-dashboard">Dashboard</button>
+                <button onclick="showSection('keuangan')" class="nav-item px-3 py-2 rounded-md text-sm" id="btn-keuangan">Keuangan</button>
+                <button onclick="showSection('jadwal')" class="nav-item px-3 py-2 rounded-md text-sm" id="btn-jadwal">Jadwal</button>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="flex-grow p-6 max-w-7xl mx-auto w-full">
-
-        <!-- SECTION: DASHBOARD -->
         <section id="dashboard" class="fade-in">
-            <h2 class="text-3xl font-bold mb-6 text-white">Dashboard Utama</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-slate-800 p-6 rounded-xl shadow-lg border-l-4 border-green-500">
-                    <p class="text-slate-400 text-sm">Saldo Kas Saat Ini</p>
-                    <h3 class="text-3xl font-bold text-white mt-2" id="dash-balance">Rp 0</h3>
+            <h2 class="text-3xl font-bold mb-6">Dashboard Utama</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-green-500">
+                    <p class="text-slate-400">Saldo Kas</p>
+                    <h3 class="text-3xl font-bold" id="dash-balance">Rp 0</h3>
                 </div>
-                <div class="bg-slate-800 p-6 rounded-xl shadow-lg border-l-4 border-blue-500">
-                    <p class="text-slate-400 text-sm">Jadwal Berikutnya</p>
-                    <h3 class="text-xl font-bold text-white mt-2" id="dash-next-match">Belum ada jadwal</h3>
+                <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
+                    <p class="text-slate-400">Jadwal Terdekat</p>
+                    <h3 class="text-xl font-bold" id="dash-next-match">Belum ada jadwal</h3>
                 </div>
-                <div class="bg-slate-800 p-6 rounded-xl shadow-lg border-l-4 border-purple-500">
-                    <p class="text-slate-400 text-sm">Total Pemain Aktif</p>
-                    <h3 class="text-3xl font-bold text-white mt-2" id="dash-players">0</h3>
-                </div>
-            </div>
-
-            <div class="bg-slate-800 p-6 rounded-xl shadow-lg">
-                <h3 class="text-xl font-bold mb-4">Grafik Keuangan Bulanan</h3>
-                <canvas id="financeChart" height="100"></canvas>
             </div>
         </section>
 
-        <!-- SECTION: KEUANGAN -->
         <section id="keuangan" class="hidden-section fade-in">
-            <h2 class="text-3xl font-bold mb-6 text-white">Manajemen Keuangan</h2>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Form Input -->
-                <div class="bg-slate-800 p-6 rounded-xl shadow-lg h-fit">
-                    <h3 class="text-xl font-bold mb-4 text-blue-400">Tambah Transaksi</h3>
-                    <form id="financeForm" onsubmit="addTransaction(event)">
-                        <div class="mb-4">
-                            <label class="block text-sm text-slate-400 mb-1">Jenis</label>
-                            <select id="f-type" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white focus:outline-none focus:border-blue-500">
-                                <option value="masuk">Pemasukan (Kas)</option>
-                                <option value="keluar">Pengeluaran (Operan)</option>
-                            </select>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm text-slate-400 mb-1">Nominal (Rp)</label>
-                            <input type="number" id="f-amount" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="Contoh: 50000" required>
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-sm text-slate-400 mb-1">Keterangan</label>
-                            <input type="text" id="f-desc" class="w-full bg-slate-700 border border-slate-600 rounded p-2 text-white focus:outline-none focus:border-blue-500" placeholder="Contoh: Iuran Bulan Ini" required>
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
-                            Simpan Data
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Tabel & Grafik -->
-                <div class="lg:col-span-2 space-y-6">
-                    <div class="bg-slate-800 p-6 rounded-xl shadow-lg">
-                        <h3 class="text-xl font-bold mb-4">Riwayat Transaksi</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left text-sm text-slate-300">
-                                <thead class="bg-slate-700 text-white uppercase">
-                                    <tr>
-                                        <th class="px-4 py-3">Tanggal</th>
-                                        <th class="px-4 py-3">Keterangan</th>
-                                        <th class="px-4 py-3">Jenis</th>
-                                        <th class="px-4 py-3 text-right">Nominal</th>
-                                        <th class="px-4 py-3 text-center">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="financeTableBody">
-                                    <!-- Data will be injected here -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+            <h2 class="text-3xl font-bold mb-6">Manajemen Keuangan</h2>
+            <form id="financeForm" onsubmit="addTransaction(event)" class="bg-slate-800 p-6 rounded-xl mb-6 flex gap-2">
+                <select id="f-type" class="bg-slate-700 p-2 rounded text-white"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select>
+                <input type="number" id="f-amount" placeholder="Nominal" class="bg-slate-700 p-2 rounded text-white w-full" required>
+                <input type="text" id="f-desc" placeholder="Keterangan" class="bg-slate-700 p-2 rounded text-white w-full" required>
+                <button type="submit" class="bg-blue-600 px-6 py-2 rounded text-white font-bold">Simpan</button>
+            </form>
+            <div class="bg-slate-800 rounded-xl overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-700 text-sm uppercase"><tr><th class="p-4">Keterangan</th><th class="p-4">Jenis</th><th class="p-4 text-right">Nominal</th></tr></thead>
+                    <tbody id="financeTableBody"></tbody>
+                </table>
             </div>
         </section>
 
-        <!-- SECTION: JADWAL -->
         <section id="jadwal" class="hidden-section fade-in">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold text-white">Jadwal Pertandingan</h2>
-                <button onclick="toggleAddMatch()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow">
-                    <i class="fa-solid fa-plus mr-2"></i> Tambah Jadwal
-                </button>
+                <h2 class="text-3xl font-bold">Jadwal Pertandingan</h2>
+                <button onclick="toggleMatchForm()" class="bg-green-600 px-4 py-2 rounded-lg"><i class="fa-solid fa-plus mr-2"></i>Tambah</button>
             </div>
-
-            <!-- Form Tambah Jadwal (Hidden by default) -->
-            <div id="addMatchForm" class="hidden bg-slate-800 p-6 rounded-xl shadow-lg mb-6">
-                <form onsubmit="addMatch(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <input type="text" id="m-opponent" placeholder="Lawan" class="bg-slate-700 p-2 rounded text-white" required>
-                    <input type="date" id="m-date" class="bg-slate-700 p-2 rounded text-white" required>
-                    <input type="time" id="m-time" class="bg-slate-700 p-2 rounded text-white" required>
-                    <input type="text" id="m-loc" placeholder="Lokasi" class="bg-slate-700 p-2 rounded text-white" required>
-                    <button type="submit" class="bg-blue-600 p-2 rounded text-white font-bold">Simpan</button>
-                </form>
+            <div id="addMatchForm" class="hidden bg-slate-800 p-6 rounded-xl mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <input type="text" id="m-opp" placeholder="Lawan" class="bg-slate-700 p-2 rounded text-white">
+                <input type="date" id="m-date" class="bg-slate-700 p-2 rounded text-white">
+                <input type="time" id="m-time" class="bg-slate-700 p-2 rounded text-white">
+                <button onclick="addMatch()" class="bg-blue-600 rounded text-white">Simpan</button>
             </div>
-
-            <div id="matchList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Match Cards injected here -->
-            </div>
+            <div id="matchList" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </section>
-
-        <!-- SECTION: FORMASI -->
-        <section id="formasi" class="hidden-section fade-in">
-            <h2 class="text-3xl font-bold mb-6 text-white">Formasi Tim (4-3-1)</h2>
-            
-            <div class="bg-slate-800 p-6 rounded-xl shadow-lg flex flex-col items-center">
-                <div class="mb-4 flex gap-4">
-                    <button onclick="setFormation('4-3-1')" class="px-4 py-2 bg-slate-700 rounded hover:bg-slate-600 text-sm">4-3-1</button>
-                    <button onclick="setFormation('3-2-1')" class="px-4 py-2 bg-slate-700 rounded hover:bg-slate-600 text-sm">3-2-1</button>
-                    <button onclick="setFormation('2-2-1')" class="px-4 py-2 bg-slate-700 rounded hover:bg-slate-600 text-sm">2-2-1</button>
-                </div>
-
-                <!-- Visual Pitch -->
-                <div class="pitch relative">
-                    <div class="pitch-line w-full h-px top-1/2"></div> <!-- Tengah -->
-                    <div class="pitch-line h-full w-px left-1/2"></div> <!-- Bagi 2 -->
-                    <div class="center-circle"></div> <!-- Lingkaran Tengah -->
-                    
-                    <!-- Area Penalti Kiri -->
-                    <div class="pitch-line w-24 h-40 border-l border-t border-b border-white absolute top-1/2 left-0 transform -translate-y-1/2"></div>
-                    <!-- Area Penalti Kanan -->
-                    <div class="pitch-line w-24 h-40 border-r border-t border-b border-white absolute top-1/2 right-0 transform -translate-y-1/2"></div>
-
-                    <!-- Players Container -->
-                    <div id="playersContainer" class="absolute inset-0 pointer-events-none">
-                        <!-- Players injected via JS -->
-                    </div>
-                </div>
-
-                <div class="mt-6 w-full max-w-md">
-                    <h4 class="text-center text-slate-400 mb-2">Daftar Pemain</h4>
-                    <div class="grid grid-cols-2 gap-2" id="playerList">
-                        <!-- List players -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
-    <footer class="bg-slate-900 text-center p-4 text-slate-500 text-sm mt-auto">
-        &copy; 2023 Futsal Club Manager. Dibuat dengan <i class="fa-solid fa-heart text-red-500"></i>
-    </footer>
-
-    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- DATA STATE ---
-        let transactions = JSON.parse(localStorage.getItem('futsal_transactions')) || [];
-        let matches = JSON.parse(localStorage.getItem('futsal_matches')) || [];
-        let players = JSON.parse(localStorage.getItem('futsal_players')) || [
-            { name: "Budi (GK)", role: "GK" },
-            { name: "Andi", role: "Def" },
-            { name: "Citra", role: "Def" },
-            { name: "Dedi", role: "Def" },
-            { name: "Eko", role: "Def" },
-            { name: "Fajar", role: "Mid" },
-            { name: "Gita", role: "Mid" },
-            { name: "Hadi", role: "Mid" },
-            { name: "Indra", role: "Fwd" }
-        ];
+        let trans = JSON.parse(localStorage.getItem('trans')) || [];
+        let matches = JSON.parse(localStorage.getItem('matches')) || [];
 
-        // --- NAVIGATION ---
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden-section'));
-            // Show target
-            document.getElementById(sectionId).classList.remove('hidden-section');
-            
-            // Update Nav Active State
-            document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('btn-' + sectionId).classList.add('active');
-
-            // Refresh data if needed
-            if(sectionId === 'dashboard') updateDashboard();
-            if(sectionId === 'keuangan') renderFinance();
-            if(sectionId === 'jadwal') renderMatches();
-            if(sectionId === 'formasi') renderPlayers();
+        function showSection(id) {
+            document.querySelectorAll('section').forEach(s => s.classList.add('hidden-section'));
+            document.getElementById(id).classList.remove('hidden-section');
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + id).classList.add('active');
         }
 
-        // --- FINANCE LOGIC ---
+        function addTransaction(e) {
+            e.preventDefault();
+            trans.push({ type: document.getElementById('f-type').value, amount: parseInt(document.getElementById('f-amount').value), desc: document.getElementById('f-desc').value });
+            localStorage.setItem('trans', JSON.stringify(trans));
+            document.getElementById('financeForm').reset();
+            render();
+        }
+
+        function addMatch() {
+            matches.push({ opp: document.getElementById('m-opp').value, date: document.getElementById('m-date').value });
+            localStorage.setItem('matches', JSON.stringify(matches));
+            render();
+        }
+
+        function toggleMatchForm() { document.getElementById('addMatchForm').classList.toggle('hidden'); }
+
+        function render() {
+            document.getElementById('financeTableBody').innerHTML = trans.map(t => `<tr class="border-b border-slate-700"><td class="p-4">${t.desc}</td><td class="p-4">${t.type}</td><td class="p-4 text-right">Rp ${t.amount.toLocaleString()}</td></tr>`).join('');
+            document.getElementById('matchList').innerHTML = matches.map(m => `<div class="bg-slate-800 p-6 rounded-xl"><h4>Vs ${m.opp}</h4><p class="text-slate-400 text-sm">${m.date}</p></div>`).join('');
+            let bal = trans.reduce((s, t) => t.type === 'masuk' ? s + t.amount : s - t.amount, 0);
+            document.getElementById('dash-balance').innerText = `Rp ${bal.toLocaleString()}`;
+            if(matches.length > 0) document.getElementById('dash-next-match').innerText = `vs ${matches[matches.length-1].opp}`;
+        }
+
+        render();
+    </script>
+</body>
+</html>
