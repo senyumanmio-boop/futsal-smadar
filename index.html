@@ -1,115 +1,259 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futsal Club Manager Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Manajemen Klub Futsal</title>
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #0f172a; color: #e2e8f0; }
-        .nav-item.active { background-color: #3b82f6; color: white; }
-        .hidden-section { display: none; }
-        .fade-in { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            margin: 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            flex: 1 1 300px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #34495e;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        input[type="number"], input[type="text"], select, input[type="date"] {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin-top: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #27ae60;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2ecc71;
+        }
+        .form-group {
+            margin-bottom: 12px;
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body>
 
-    <nav class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center text-xl font-bold"><i class="fa-solid fa-futbol text-blue-500 mr-3"></i> FUTSAL<span class="text-blue-500">CLUB</span></div>
-            <div class="flex space-x-2">
-                <button onclick="showSection('dashboard')" class="nav-item active px-3 py-2 rounded-md text-sm" id="btn-dashboard">Dashboard</button>
-                <button onclick="showSection('keuangan')" class="nav-item px-3 py-2 rounded-md text-sm" id="btn-keuangan">Keuangan</button>
-                <button onclick="showSection('jadwal')" class="nav-item px-3 py-2 rounded-md text-sm" id="btn-jadwal">Jadwal</button>
-            </div>
+<header>
+    <h1>Manajemen Klub Futsal</h1>
+</header>
+
+<div class="container">
+    <!-- Kas -->
+    <div class="card" id="kas">
+        <h2>Kas</h2>
+        <p>Total Pemasukan: <span id="total_pemasukan">0</span></p>
+        <p>Total Pengeluaran: <span id="total_pengeluaran">0</span></p>
+        <p>Saldo: <span id="saldo">0</span></p>
+        <div>
+            <h3>Tambah Pemasukan</h3>
+            <input type="number" id="pemasukan_amount" placeholder="Jumlah pemasukan" />
+            <button onclick="tambahPemasukan()">Tambah</button>
         </div>
-    </nav>
+        <div>
+            <h3>Tambah Pengeluaran</h3>
+            <input type="number" id="pengeluaran_amount" placeholder="Jumlah pengeluaran" />
+            <button onclick="tambahPengeluaran()">Tambah</button>
+        </div>
+    </div>
 
-    <main class="flex-grow p-6 max-w-7xl mx-auto w-full">
-        <section id="dashboard" class="fade-in">
-            <h2 class="text-3xl font-bold mb-6">Dashboard Utama</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-green-500">
-                    <p class="text-slate-400">Saldo Kas</p>
-                    <h3 class="text-3xl font-bold" id="dash-balance">Rp 0</h3>
-                </div>
-                <div class="bg-slate-800 p-6 rounded-xl border-l-4 border-blue-500">
-                    <p class="text-slate-400">Jadwal Terdekat</p>
-                    <h3 class="text-xl font-bold" id="dash-next-match">Belum ada jadwal</h3>
-                </div>
+    <!-- Formasi Tim -->
+    <div class="card" id="formasi">
+        <h2>Formasi Tim</h2>
+        <form id="formasiForm" onsubmit="return tambahFormasi()">
+            <div class="form-group">
+                <label>Nama Pemain:</label>
+                <input type="text" id="nama_pemain" required />
             </div>
-        </section>
-
-        <section id="keuangan" class="hidden-section fade-in">
-            <h2 class="text-3xl font-bold mb-6">Manajemen Keuangan</h2>
-            <form id="financeForm" onsubmit="addTransaction(event)" class="bg-slate-800 p-6 rounded-xl mb-6 flex gap-2">
-                <select id="f-type" class="bg-slate-700 p-2 rounded text-white"><option value="masuk">Pemasukan</option><option value="keluar">Pengeluaran</option></select>
-                <input type="number" id="f-amount" placeholder="Nominal" class="bg-slate-700 p-2 rounded text-white w-full" required>
-                <input type="text" id="f-desc" placeholder="Keterangan" class="bg-slate-700 p-2 rounded text-white w-full" required>
-                <button type="submit" class="bg-blue-600 px-6 py-2 rounded text-white font-bold">Simpan</button>
-            </form>
-            <div class="bg-slate-800 rounded-xl overflow-hidden">
-                <table class="w-full text-left">
-                    <thead class="bg-slate-700 text-sm uppercase"><tr><th class="p-4">Keterangan</th><th class="p-4">Jenis</th><th class="p-4 text-right">Nominal</th></tr></thead>
-                    <tbody id="financeTableBody"></tbody>
-                </table>
+            <div class="form-group">
+                <label>Posisi:</label>
+                <select id="posisi" required>
+                    <option value="Penjaga Gawang">Penjaga Gawang</option>
+                    <option value="Belakang">Belakang</option>
+                    <option value="Tengah">Tengah</option>
+                    <option value="Penyerang">Penyerang</option>
+                </select>
             </div>
-        </section>
+            <button type="submit">Tambah Pemain</button>
+        </form>
+        <table id="tabelFormasi">
+            <thead>
+                <tr>
+                    <th>Nama Pemain</th>
+                    <th>Posisi</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
-        <section id="jadwal" class="hidden-section fade-in">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-3xl font-bold">Jadwal Pertandingan</h2>
-                <button onclick="toggleMatchForm()" class="bg-green-600 px-4 py-2 rounded-lg"><i class="fa-solid fa-plus mr-2"></i>Tambah</button>
+    <!-- Jadwal Tanding -->
+    <div class="card" id="jadwal">
+        <h2>Jadwal Tanding</h2>
+        <form id="jadwalForm" onsubmit="return tambahJadwal()">
+            <div class="form-group">
+                <label>Tanggal:</label>
+                <input type="date" id="tanggal" required />
             </div>
-            <div id="addMatchForm" class="hidden bg-slate-800 p-6 rounded-xl mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-                <input type="text" id="m-opp" placeholder="Lawan" class="bg-slate-700 p-2 rounded text-white">
-                <input type="date" id="m-date" class="bg-slate-700 p-2 rounded text-white">
-                <input type="time" id="m-time" class="bg-slate-700 p-2 rounded text-white">
-                <button onclick="addMatch()" class="bg-blue-600 rounded text-white">Simpan</button>
+            <div class="form-group">
+                <label>Waktu:</label>
+                <input type="text" id="waktu" placeholder="Contoh: 15:00" required />
             </div>
-            <div id="matchList" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-        </section>
-    </main>
+            <div class="form-group">
+                <label>Tempat:</label>
+                <input type="text" id="tempat" placeholder="Lokasi pertandingan" required />
+            </div>
+            <button type="submit">Tambah Jadwal</button>
+        </form>
+        <table id="tabelJadwal">
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Waktu</th>
+                    <th>Tempat</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
 
-    <script>
-        let trans = JSON.parse(localStorage.getItem('trans')) || [];
-        let matches = JSON.parse(localStorage.getItem('matches')) || [];
+<script>
+    // Data kas
+    let pemasukan = 0;
+    let pengeluaran = 0;
 
-        function showSection(id) {
-            document.querySelectorAll('section').forEach(s => s.classList.add('hidden-section'));
-            document.getElementById(id).classList.remove('hidden-section');
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + id).classList.add('active');
+    // Data formasi
+    const formasiList = [];
+
+    // Data jadwal
+    const jadwalList = [];
+
+    // Update saldo
+    function updateKas() {
+        document.getElementById('total_pemasukan').innerText = pemasukan;
+        document.getElementById('total_pengeluaran').innerText = pengeluaran;
+        document.getElementById('saldo').innerText = pemasukan - pengeluaran;
+    }
+
+    function tambahPemasukan() {
+        const amount = parseFloat(document.getElementById('pemasukan_amount').value);
+        if (!isNaN(amount) && amount > 0) {
+            pemasukan += amount;
+            document.getElementById('pemasukan_amount').value = '';
+            updateKas();
+        } else {
+            alert('Masukkan jumlah pemasukan yang valid.');
         }
+    }
 
-        function addTransaction(e) {
-            e.preventDefault();
-            trans.push({ type: document.getElementById('f-type').value, amount: parseInt(document.getElementById('f-amount').value), desc: document.getElementById('f-desc').value });
-            localStorage.setItem('trans', JSON.stringify(trans));
-            document.getElementById('financeForm').reset();
-            render();
+    function tambahPengeluaran() {
+        const amount = parseFloat(document.getElementById('pengeluaran_amount').value);
+        if (!isNaN(amount) && amount > 0) {
+            pengeluaran += amount;
+            document.getElementById('pengeluaran_amount').value = '';
+            updateKas();
+        } else {
+            alert('Masukkan jumlah pengeluaran yang valid.');
         }
+    }
 
-        function addMatch() {
-            matches.push({ opp: document.getElementById('m-opp').value, date: document.getElementById('m-date').value });
-            localStorage.setItem('matches', JSON.stringify(matches));
-            render();
+    // Tambah formasi
+    function tambahFormasi() {
+        const nama = document.getElementById('nama_pemain').value;
+        const posisi = document.getElementById('posisi').value;
+        if (nama && posisi) {
+            formasiList.push({nama, posisi});
+            tampilkanFormasi();
+            document.getElementById('formasiForm').reset();
         }
+        return false;
+    }
 
-        function toggleMatchForm() { document.getElementById('addMatchForm').classList.toggle('hidden'); }
+    function tampilkanFormasi() {
+        const tbody = document.querySelector('#tabelFormasi tbody');
+        tbody.innerHTML = '';
+        formasiList.forEach(pemain => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${pemain.nama}</td>
+                <td>${pemain.posisi}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
 
-        function render() {
-            document.getElementById('financeTableBody').innerHTML = trans.map(t => `<tr class="border-b border-slate-700"><td class="p-4">${t.desc}</td><td class="p-4">${t.type}</td><td class="p-4 text-right">Rp ${t.amount.toLocaleString()}</td></tr>`).join('');
-            document.getElementById('matchList').innerHTML = matches.map(m => `<div class="bg-slate-800 p-6 rounded-xl"><h4>Vs ${m.opp}</h4><p class="text-slate-400 text-sm">${m.date}</p></div>`).join('');
-            let bal = trans.reduce((s, t) => t.type === 'masuk' ? s + t.amount : s - t.amount, 0);
-            document.getElementById('dash-balance').innerText = `Rp ${bal.toLocaleString()}`;
-            if(matches.length > 0) document.getElementById('dash-next-match').innerText = `vs ${matches[matches.length-1].opp}`;
+    // Tambah jadwal
+    function tambahJadwal() {
+        const tanggal = document.getElementById('tanggal').value;
+        const waktu = document.getElementById('waktu').value;
+        const tempat = document.getElementById('tempat').value;
+        if (tanggal && waktu && tempat) {
+            jadwalList.push({tanggal, waktu, tempat});
+            tampilkanJadwal();
+            document.getElementById('jadwalForm').reset();
         }
+        return false;
+    }
 
-        render();
-    </script>
+    function tampilkanJadwal() {
+        const tbody = document.querySelector('#tabelJadwal tbody');
+        tbody.innerHTML = '';
+        jadwalList.forEach(jadwal => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${jadwal.tanggal}</td>
+                <td>${jadwal.waktu}</td>
+                <td>${jadwal.tempat}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Inisialisasi saldo awal
+    updateKas();
+</script>
+
 </body>
 </html>
