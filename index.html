@@ -3,21 +3,26 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Manajemen Klub Futsal</title>
+<title>Futsal Club Manager</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<!-- Font Awesome untuk ikon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body class="flex flex-col min-h-screen">
 
 <!-- Navbar -->
 <nav class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
   <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-    <div class="flex items-center space-x-2 font-bold text-xl text-blue-500">
+    <!-- Logo dan Judul -->
+    <div class="flex items-center space-x-3 font-bold text-xl text-blue-400">
       <i class="fas fa-futbol"></i>
       <span>FUTSAL CLUB</span>
     </div>
+    <!-- Menu Navigasi -->
     <div class="flex space-x-4">
       <button id="btn-dashboard" class="px-3 py-2 rounded-md bg-blue-600 font-semibold" onclick="showSection('dashboard')">Dashboard</button>
       <button id="btn-keuangan" class="px-3 py-2 rounded-md hover:bg-gray-700" onclick="showSection('keuangan')">Keuangan</button>
+      <button id="btn-formasi" class="px-3 py-2 rounded-md hover:bg-gray-700" onclick="showSection('formasi')">Formasi</button>
       <button id="btn-jadwal" class="px-3 py-2 rounded-md hover:bg-gray-700" onclick="showSection('jadwal')">Jadwal</button>
     </div>
   </div>
@@ -30,11 +35,17 @@
   <section id="dashboard" class="transition-all duration-300">
     <div class="grid md:grid-cols-2 gap-6">
       <div class="bg-gray-800 p-6 rounded-xl border-l-4 border-green-500 shadow-lg">
-        <p class="text-gray-400 mb-2">Saldo Kas</p>
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-gray-400">Saldo Kas</p>
+          <i class="fas fa-wallet text-green-400"></i>
+        </div>
         <h3 class="text-3xl font-bold" id="dash-balance">Rp 0</h3>
       </div>
       <div class="bg-gray-800 p-6 rounded-xl border-l-4 border-blue-500 shadow-lg">
-        <p class="text-gray-400 mb-2">Jadwal Terdekat</p>
+        <div class="flex items-center justify-between mb-2">
+          <p class="text-gray-400">Jadwal Terdekat</p>
+          <i class="fas fa-calendar-alt text-blue-400"></i>
+        </div>
         <h3 class="text-xl font-semibold" id="dash-next-match">Belum ada jadwal</h3>
       </div>
     </div>
@@ -42,8 +53,11 @@
 
   <!-- Keuangan -->
   <section id="keuangan" class="hidden transition-all duration-300">
-    <h2 class="text-3xl font-bold mb-4">Manajemen Keuangan</h2>
-    <form id="financeForm" onsubmit="addTransaction(event)" class="bg-gray-800 p-6 rounded-xl mb-6 flex flex-col md:flex-row gap-4">
+    <h2 class="text-3xl font-bold mb-4 flex items-center space-x-2">
+      <i class="fas fa-money-bill-wave"></i>
+      <span>Manajemen Keuangan</span>
+    </h2>
+    <form id="financeForm" onsubmit="addTransaction(event)" class="bg-gray-800 p-6 rounded-xl mb-6 flex flex-col md:flex-row gap-4 shadow-lg">
       <select id="f-type" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-white" required>
         <option value="masuk">Pemasukan</option>
         <option value="keluar">Pengeluaran</option>
@@ -53,7 +67,7 @@
       <button type="submit" class="bg-blue-600 px-6 py-3 rounded font-semibold hover:bg-blue-500 transition">Simpan</button>
     </form>
     <div class="overflow-x-auto">
-      <table class="w-full text-left table-auto border-collapse border border-gray-700 rounded-lg overflow-hidden">
+      <table class="w-full text-left table-auto border-collapse border border-gray-700 rounded-lg overflow-hidden shadow-lg">
         <thead class="bg-gray-700 text-sm uppercase">
           <tr>
             <th class="p-4 border border-gray-600">Keterangan</th>
@@ -66,30 +80,70 @@
     </div>
   </section>
 
-  <!-- Jadwal -->
-  <section id="jadwal" class="hidden transition-all duration-300">
-    <div class="flex justify-between items-center mb-4">
-      <h2 class="text-3xl font-bold">Jadwal Pertandingan</h2>
-      <button onclick="toggleMatchForm()" class="bg-green-600 px-4 py-2 rounded-lg flex items-center hover:bg-green-500 transition">
-        <i class="fas fa-plus mr-2"></i>Tambah
-      </button>
+  <!-- Formasi & Jadwal -->
+  <section id="formasi" class="hidden transition-all duration-300 space-y-6">
+
+    <!-- Formasi Pemain -->
+    <div>
+      <h2 class="text-3xl font-bold mb-4 flex items-center space-x-2">
+        <i class="fas fa-users"></i>
+        <span>Formasi Pemain</span>
+      </h2>
+      <form id="formasiForm" onsubmit="return tambahFormasi()" class="bg-gray-800 p-6 rounded-xl mb-4 flex flex-col md:flex-row gap-4 shadow-lg">
+        <input type="text" id="nama_pemain" placeholder="Nama Pemain" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-white" required>
+        <select id="posisi" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-white" required>
+          <option value="">Pilih Posisi</option>
+          <option value="Penjaga Gawang">Penjaga Gawang</option>
+          <option value="Belakang">Belakang</option>
+          <option value="Tengah">Tengah</option>
+          <option value="Penyerang">Penyerang</option>
+        </select>
+        <button type="submit" class="bg-green-600 px-4 py-3 rounded font-semibold hover:bg-green-500 transition">Tambah Pemain</button>
+      </form>
+      <div class="overflow-x-auto">
+        <table class="w-full border border-gray-700 rounded-lg shadow-lg">
+          <thead class="bg-gray-700 text-sm uppercase">
+            <tr>
+              <th class="p-4 border border-gray-600">Nama Pemain</th>
+              <th class="p-4 border border-gray-600">Posisi</th>
+            </tr>
+          </thead>
+          <tbody id="formasiTableBody" class="bg-gray-800"></tbody>
+        </table>
+      </div>
     </div>
-    <div id="addMatchForm" class="hidden bg-gray-800 p-6 rounded-xl mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-      <input type="text" id="m-opp" placeholder="Lawan" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-white" required>
-      <input type="date" id="m-date" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-white" required>
-      <input type="time" id="m-time" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-white" required>
-      <button onclick="addMatch()" class="bg-blue-600 px-4 py-3 rounded font-semibold hover:bg-blue-500 transition">Simpan</button>
+
+    <!-- Jadwal Pertandingan -->
+    <div>
+      <h2 class="text-3xl font-bold mb-4 flex items-center space-x-2">
+        <i class="fas fa-calendar-check"></i>
+        <span>Jadwal Pertandingan</span>
+      </h2>
+      <div class="flex items-center justify-between mb-4">
+        <button onclick="toggleMatchForm()" class="bg-green-600 px-4 py-2 rounded-lg flex items-center hover:bg-green-500 transition">
+          <i class="fas fa-plus mr-2"></i>Tambah Jadwal
+        </button>
+      </div>
+      <div id="addMatchForm" class="hidden bg-gray-800 p-6 rounded-xl mb-4 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <input type="text" id="m-opp" placeholder="Lawan" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-white" required>
+        <input type="date" id="m-date" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-white" required>
+        <input type="time" id="m-time" class="bg-gray-700 p-3 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-white" required>
+        <button onclick="addMatch()" class="bg-blue-600 px-4 py-3 rounded font-semibold hover:bg-blue-500 transition">Simpan</button>
+      </div>
+      <div id="matchList" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
     </div>
-    <div id="matchList" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
   </section>
 
 </main>
 
-<!-- Scripts -->
+<!-- Script -->
 <script>
+  // Data storage
   let trans = JSON.parse(localStorage.getItem('trans')) || [];
   let matches = JSON.parse(localStorage.getItem('matches')) || [];
+  let formasi = [];
 
+  // Function to toggle sections
   function showSection(id) {
     document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
@@ -97,6 +151,7 @@
     document.getElementById('btn-' + id).classList.add('bg-blue-600');
   }
 
+  // Tambah transaksi keuangan
   function addTransaction(e) {
     e.preventDefault();
     const type = document.getElementById('f-type').value;
@@ -108,6 +163,7 @@
     render();
   }
 
+  // Tambah jadwal pertandingan
   function addMatch() {
     const opp = document.getElementById('m-opp').value;
     const date = document.getElementById('m-date').value;
@@ -121,12 +177,26 @@
     render();
   }
 
+  // Toggle form jadwal
   function toggleMatchForm() {
     document.getElementById('addMatchForm').classList.toggle('hidden');
   }
 
+  // Tambah formasi pemain
+  function tambahFormasi() {
+    const nama = document.getElementById('nama_pemain').value;
+    const posisi = document.getElementById('posisi').value;
+    if(nama && posisi) {
+      formasi.push({nama, posisi});
+      document.getElementById('formasiForm').reset();
+      renderFormasi();
+    }
+    return false;
+  }
+
+  // Render data ke tampilan
   function render() {
-    // Render transaksi keuangan
+    // Tabel keuangan
     document.getElementById('financeTableBody').innerHTML = trans.map(t => `
       <tr class="border-b border-gray-700">
         <td class="p-4 border border-gray-600">${t.desc}</td>
@@ -134,28 +204,37 @@
         <td class="p-4 border border-gray-600 text-right">Rp ${t.amount.toLocaleString()}</td>
       </tr>
     `).join('');
-
     // Hitung saldo
-    const saldo = trans.reduce((acc, t) => t.type === 'masuk' ? acc + t.amount : acc - t.amount, 0);
+    const saldo = trans.reduce((a, t) => t.type==='masuk'?a+t.amount:a-t.amount, 0);
     document.getElementById('dash-balance').innerText = `Rp ${saldo.toLocaleString()}`;
 
-    // Render jadwal
+    // Render jadwal pertandingan
     document.getElementById('matchList').innerHTML = matches.map(m => `
       <div class="bg-gray-700 p-4 rounded-lg shadow-lg">
         <h4 class="font-semibold mb-2">Vs ${m.opp}</h4>
         <p class="text-gray-300">${m.date} | ${m.time}</p>
       </div>
     `).join('');
-
     // Jadwal terdekat
     if(matches.length > 0) {
       document.getElementById('dash-next-match').innerText = `vs ${matches[matches.length-1].opp}`;
     } else {
       document.getElementById('dash-next-match').innerText = 'Belum ada jadwal';
     }
+    // Render formasi pemain
+    renderFormasi();
   }
 
-  // Set aktif section
+  function renderFormasi() {
+    document.getElementById('formasiTableBody').innerHTML = formasi.map(p => `
+      <tr>
+        <td class="p-4 border border-gray-600">${p.nama}</td>
+        <td class="p-4 border border-gray-600">${p.posisi}</td>
+      </tr>
+    `).join('');
+  }
+
+  // Inisialisasi
   showSection('dashboard');
   render();
 </script>
