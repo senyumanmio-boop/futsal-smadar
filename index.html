@@ -5,28 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futsal Pro Hub | Smadar FC</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <div class="container">
-        <nav class="sidebar">
-            <h2>KIM FUTSAL HUB</h2>
-            <ul>
-                <li onclick="showFeature('formasi')">📋 Susun Formasi (#1)</li>
-                <li onclick="showFeature('skor')">⏱️ Papan Skor (#2)</li>
-                <li onclick="showFeature('statistik')">📊 Statistik Pemain (#4)</li>
-                <li onclick="showFeature('bagan')">🏆 Bagan Turnamen (#5)</li>
-                <li onclick="showFeature('jersey')">👕 Desain Jersey (#6)</li>
-                <li onclick="showFeature('kas')">💰 Kas & Sewa (#9)</li>
-            </ul>
-        </nav>
+    <div class="background-blob"></div>
+    <div class="background-blob blob-2"></div>
 
-        <main class="content" id="main-display">
-            <div class="welcome-msg">
-                <h1>Selamat Datang, Kim! ⚽</h1>
-                <p>Siap mengelola tim <strong>Smadar FC</strong> hari ini?</p>
-                <p>Pilih menu di samping untuk mulai menggunakan fitur manajemen futsal kamu.</p>
+    <div class="glass-container">
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fas fa-futbol"></i>
+                <span>KIM HUB</span>
+            </div>
+            <nav>
+                <ul>
+                    <li onclick="showFeature('formasi')" class="nav-item">
+                        <i class="fas fa-clipboard-list"></i> Susun Formasi (#1)
+                    </li>
+                    <li onclick="showFeature('skor')" class="nav-item">
+                        <i class="fas fa-stopwatch"></i> Papan Skor (#2)
+                    </li>
+                    <li onclick="showFeature('statistik')" class="nav-item">
+                        <i class="fas fa-chart-line"></i> Statistik Pemain (#4)
+                    </li>
+                    <li onclick="showFeature('bagan')" class="nav-item">
+                        <i class="fas fa-trophy"></i> Bagan Turnamen (#5)
+                    </li>
+                    <li onclick="showFeature('jersey')" class="nav-item">
+                        <i class="fas fa-tshirt"></i> Desain Jersey (#6)
+                    </li>
+                    <li onclick="showFeature('kas')" class="nav-item">
+                        <i class="fas fa-wallet"></i> Kas & Sewa (#9)
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content" id="main-display">
+            <div class="hero">
+                <h1>Halo, Kim! 👋</h1>
+                <p>Siap mengelola <span>Smadar FC</span> untuk kemenangan hari ini?</p>
+                <div class="cta-grid">
+                    <div class="card">
+                        <i class="fas fa-users"></i>
+                        <h3>4 Pemain</h3>
+                        <p>Aktif di Lapangan</p>
+                    </div>
+                    <div class="card">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <h3>Kas Tim</h3>
+                        <p>Saldo Terjaga</p>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
